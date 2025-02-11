@@ -12,9 +12,12 @@ export class UserRepository {
     });
   }
 
-  async update(id: number, user: User) {
-    return await this.prismaService.user.update({
-      where: { id },
+  async update(user: User) {
+    if (!user.id) throw new Error('user id is required');
+    return this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
       data: user,
     });
   }
@@ -27,5 +30,11 @@ export class UserRepository {
 
   async list() {
     return await this.prismaService.user.findMany();
+  }
+
+  async findById(id: number) {
+    return await this.prismaService.user.findUnique({
+      where: { id },
+    });
   }
 }
